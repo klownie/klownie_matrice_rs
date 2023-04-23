@@ -1,7 +1,7 @@
 # klownie_matrix_rs
 A matrice implementation that I made to learn rust
 
-# exemple of usage with diferent type of numbers
+# exemple of usage with diferent types of numbers
 
 ```rust
 use klownie_matrix::Matrice;
