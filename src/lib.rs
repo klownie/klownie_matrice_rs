@@ -7,6 +7,8 @@ use rand::distributions::{Distribution, Standard};
 use rand::Rng;
 use std::fmt::{self, Display, Formatter};
 use std::ops::Mul;
+use std::ops::Add;
+use std::ops::Sub;
 
 #[derive(Debug, Clone)]
 pub struct Matrice<T> {
@@ -114,6 +116,60 @@ where
     }
 }
 
+impl<T> Add for &Matrice<T>
+where
+    T: Zero + Clone + Add<Output = T> ,
+{
+    type Output = Matrice<T>;
+
+    fn add(self, other : Self) -> Matrice<T> {
+        assert_eq!(
+            (self.data.len(),self.data[0].len()),
+            (other.data.len(),other.data[0].len()),
+            "Ces matrice ne peuvent pas etre additionner entre elle "
+        );
+
+        // Cree une nouvelle matrice qui contiendra le resultat
+        let mut result = Matrice::new(self.data.len(),self.data[0].len());
+
+        // Calcule d'addition entre matrice
+        for i in 0..self.data.len(){
+            result.data[i] = self.data[i].iter().zip(other.data[i].clone()).map(|(x1 , x2)| x1.clone() + x2.clone() ).collect()
+        }
+
+        result
+
+    }
+
+}
+
+impl<T> Sub for &Matrice<T>
+where
+    T: Zero + Clone + Sub<Output = T> ,
+{
+    type Output = Matrice<T>;
+
+    fn sub(self, other : Self) -> Matrice<T> {
+        assert_eq!(
+            (self.data.len(),self.data[0].len()),
+            (other.data.len(),other.data[0].len()),
+            "Ces matrice ne peuvent pas etre additionner entre elle "
+        );
+
+        // Cree une nouvelle matrice qui contiendra le resultat
+        let mut result = Matrice::new(self.data.len(),self.data[0].len());
+
+        // Calcule d'addition entre matrice
+        for i in 0..self.data.len(){
+            result.data[i] = self.data[i].iter().zip(other.data[i].clone()).map(|(x1 , x2)| x1.clone() - x2.clone() ).collect()
+        }
+
+        result
+
+    }
+
+}
+
 impl<T> Mul for &Matrice<T>
 where
     T: Zero + Clone + Mul<Output = T>,
@@ -125,13 +181,13 @@ where
         assert_eq!(
             self.data[0].len(),
             other.data.len(),
-            "C'est matrice ne peuvent pas etre multiplier entre elle"
+            "Ces matrice ne peuvent pas etre multiplier entre elle"
         );
 
-        // Create a new matrix to hold the result
-        let mut result = Matrice::<T>::new(self.data.len(), other.data[0].len());
+        // Cree une nouvel matrice qui contiendra le produit
+        let mut result = Matrice::new(self.data.len(), other.data[0].len());
 
-        // Compute the matrix product
+        // Calcule de produit entre matrice
         for i in 0..self.data.len() {
             for j in 0..other.data[0].len() {
                 let mut sum = T::zero();
@@ -176,3 +232,4 @@ where
         Ok(())
     }
 }
+
