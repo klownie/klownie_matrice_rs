@@ -233,3 +233,15 @@ where
     }
 }
 
+#[macro_export]
+macro_rules! mat {
+    ($rows:expr, $cols:expr, $v:expr) => {{
+        assert_eq!($v.len(), $rows * $cols);
+
+        let mut matrice = Matrice::new($rows, $cols);
+        matrice.remplir($v);
+
+        matrice
+    }};
+}
+
