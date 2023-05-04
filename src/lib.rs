@@ -1,10 +1,5 @@
-use num::complex::Complex;
-use num::Num;
 use num::One;
 use num::Zero;
-use rand::distributions::uniform::SampleUniform;
-use rand::distributions::{Distribution, Standard};
-use rand::Rng;
 use std::fmt::{self, Display, Formatter};
 use std::ops::Mul;
 use std::ops::Add;
@@ -41,49 +36,7 @@ where
                 row[j] = numbers[i * row.len() + j].clone();
             }
         }
-
         self
-    }
-}
-
-impl<T> Matrice<T>
-where
-    Standard: Distribution<T>,
-    T: Zero + Clone + SampleUniform + PartialOrd + One,
-{
-    pub fn junk(hauteur: usize, longueur: usize, range: std::ops::Range<T>) -> Self {
-        let mut data = vec![vec![T::zero(); longueur]; hauteur];
-        let mut rng = rand::thread_rng();
-        data.iter_mut().for_each(|row| {
-            row.iter_mut()
-                .for_each(|element| *element = rng.gen_range(range.clone()))
-        });
-        Self { data }
-    }
-}
-
-impl<T> Matrice<Complex<T>>
-where
-    T: Clone + Zero + Num + SampleUniform + PartialOrd,
-    Standard: Distribution<T>,
-{
-    pub fn junk_complex(
-        hauteur: usize,
-        longueur: usize,
-        range_re: std::ops::Range<T>,
-        range_im: std::ops::Range<T>,
-    ) -> Self {
-        let mut data = vec![vec![Complex::zero(); longueur]; hauteur];
-        let mut rng = rand::thread_rng();
-        data.iter_mut().for_each(|row| {
-            row.iter_mut().for_each(|element| {
-                *element = Complex::new(
-                    rng.gen_range(range_re.clone()),
-                    rng.gen_range(range_im.clone()),
-                )
-            })
-        });
-        Self { data }
     }
 }
 
