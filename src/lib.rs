@@ -1,8 +1,8 @@
 use num::One;
 use num::Zero;
 use std::fmt::{self, Display, Formatter};
-use std::ops::Mul;
 use std::ops::Add;
+use std::ops::Mul;
 use std::ops::Sub;
 
 #[derive(Debug, Clone)]
@@ -17,6 +17,24 @@ where
     pub fn new(hauteur: usize, longueur: usize) -> Self {
         let data = vec![vec![T::zero(); longueur]; hauteur];
         Self { data }
+    }
+}
+
+impl<T> Matrice<T>
+where
+    T: Clone,
+{
+    pub fn raw(&self) -> Vec<T> {
+        // Renvoie un vecteur contenant tout les element de la matrice
+        let mut raw_data = Vec::new();
+
+        for row in self.data.iter() {
+            for j in 0..row.len() {
+                raw_data.push(row[j].clone());
+            }
+        }
+
+        raw_data
     }
 }
 
@@ -71,56 +89,60 @@ where
 
 impl<T> Add for &Matrice<T>
 where
-    T: Zero + Clone + Add<Output = T> ,
+    T: Zero + Clone + Add<Output = T>,
 {
     type Output = Matrice<T>;
 
-    fn add(self, other : Self) -> Matrice<T> {
+    fn add(self, other: Self) -> Matrice<T> {
         assert_eq!(
-            (self.data.len(),self.data[0].len()),
-            (other.data.len(),other.data[0].len()),
+            (self.data.len(), self.data[0].len()),
+            (other.data.len(), other.data[0].len()),
             "Ces matrice ne peuvent pas etre additionner entre elle "
         );
 
         // Cree une nouvelle matrice qui contiendra le resultat
-        let mut result = Matrice::new(self.data.len(),self.data[0].len());
+        let mut result = Matrice::new(self.data.len(), self.data[0].len());
 
         // Calcule d'addition entre matrice
-        for i in 0..self.data.len(){
-            result.data[i] = self.data[i].iter().zip(other.data[i].clone()).map(|(x1 , x2)| x1.clone() + x2.clone() ).collect()
+        for i in 0..self.data.len() {
+            result.data[i] = self.data[i]
+                .iter()
+                .zip(other.data[i].clone())
+                .map(|(x1, x2)| x1.clone() + x2.clone())
+                .collect()
         }
 
         result
-
     }
-
 }
 
 impl<T> Sub for &Matrice<T>
 where
-    T: Zero + Clone + Sub<Output = T> ,
+    T: Zero + Clone + Sub<Output = T>,
 {
     type Output = Matrice<T>;
 
-    fn sub(self, other : Self) -> Matrice<T> {
+    fn sub(self, other: Self) -> Matrice<T> {
         assert_eq!(
-            (self.data.len(),self.data[0].len()),
-            (other.data.len(),other.data[0].len()),
+            (self.data.len(), self.data[0].len()),
+            (other.data.len(), other.data[0].len()),
             "Ces matrice ne peuvent pas etre additionner entre elle "
         );
 
         // Cree une nouvelle matrice qui contiendra le resultat
-        let mut result = Matrice::new(self.data.len(),self.data[0].len());
+        let mut result = Matrice::new(self.data.len(), self.data[0].len());
 
         // Calcule d'addition entre matrice
-        for i in 0..self.data.len(){
-            result.data[i] = self.data[i].iter().zip(other.data[i].clone()).map(|(x1 , x2)| x1.clone() - x2.clone() ).collect()
+        for i in 0..self.data.len() {
+            result.data[i] = self.data[i]
+                .iter()
+                .zip(other.data[i].clone())
+                .map(|(x1, x2)| x1.clone() - x2.clone())
+                .collect()
         }
 
         result
-
     }
-
 }
 
 impl<T> Mul for &Matrice<T>
@@ -197,4 +219,3 @@ macro_rules! mat {
         matrice
     }};
 }
-
